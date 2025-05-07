@@ -1,0 +1,35 @@
+graph TD
+    A[Interface Web] --> B[Audio Worklets]
+    B --> C[WebSocket Client]
+    C --> D[Starlette Server]
+    D --> E[OpenAI Voice React Agent]
+    E --> F[OpenAI Realtime API]
+    F --> G[Agent Executor]
+    G --> H[Tools]
+    H --> I[MongoDB Atlas]
+    I --> K[Rentals Collection]
+    I --> L[Bookings Collection]
+    H --> G
+    G --> F
+    F --> E
+    D --> J[Audio Output]
+    J --> A
+    F --> M[TTS Model]
+    F --> N[Whisper Model]
+    F --> O[GPT-4o Model]
+    
+    style A fill:#d4f1f9,stroke:#05a,stroke-width:2px
+    style B fill:#d4f1f9,stroke:#05a,stroke-width:2px
+    style C fill:#d4f1f9,stroke:#05a,stroke-width:2px
+    style J fill:#d4f1f9,stroke:#05a,stroke-width:2px
+    style D fill:#e1d5e7,stroke:#71a,stroke-width:2px
+    style E fill:#e1d5e7,stroke:#71a,stroke-width:2px
+    style F fill:#dae8fc,stroke:#6c8ebf,stroke-width:2px
+    style G fill:#dae8fc,stroke:#6c8ebf,stroke-width:2px
+    style H fill:#dae8fc,stroke:#6c8ebf,stroke-width:2px
+    style I fill:#d5e8d4,stroke:#080,stroke-width:2px
+    style K fill:#d5e8d4,stroke:#080,stroke-width:2px
+    style L fill:#d5e8d4,stroke:#080,stroke-width:2px
+    style M fill:#fff2cc,stroke:#d6b656,stroke-width:2px
+    style N fill:#fff2cc,stroke:#d6b656,stroke-width:2px
+    style O fill:#fff2cc,stroke:#d6b656,stroke-width:2px

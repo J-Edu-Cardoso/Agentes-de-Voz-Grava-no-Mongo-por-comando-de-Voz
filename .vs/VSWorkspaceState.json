@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\langchain_openai_voice",
+    "\\src\\langchain_openai_voice\\__pycache__",
+    "\\src\\server",
+    "\\src\\server\\static",
+    "\\src\\server\\__pycache__"
+  ],
+  "SelectedNode": "\\setup_database.py",
+  "PreviewInSolutionExplorer": false
+}

@@ -1,205 +1,962 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microphone to Speaker</title>
+    <title>ControlSpeak - Audio Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: linear-gradient(135deg, #112809 0%, #1a3a0e 100%);
+            --secondary: #19eb699b;
+            --accent: #ff3a3a;
+            --text: #ffffff;
+            --sidebar-width: 250px;
+            --collapsed-sidebar: 80px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background: var(--primary);
+            color: var(--text);
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(17, 40, 9, 0.8); /* Semi-transparent green */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+            position: relative;
+            z-index: 110;
+        }
+
+        .sidebar.collapsed {
+            width: var(--collapsed-sidebar);
+        }
+
+        .sidebar.collapsed .menu-text,
+        .sidebar.collapsed .logo-text,
+        .sidebar.collapsed .submenu {
+            display: none;
+        }
+
+        .sidebar.collapsed .menu-item {
+            justify-content: center;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+            color: var(--secondary);
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+
+        .menu {
+            flex-grow: 1;
+        }
+
+        .menu-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-item.active {
+            background-color: var(--secondary);
+            color: var(--primary);
+        }
+
+        .submenu {
+            padding-left: 20px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .submenu.show {
+            display: block;
+        }
+
+        .submenu-item {
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+
+        /* Carousel Styles */
+        .top-carousel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: calc(100% - var(--sidebar-width));
+            height: 120px;
+            overflow: hidden;
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar.collapsed ~ .top-carousel {
+            width: calc(100% - var(--collapsed-sidebar));
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease;
+            height: 100%;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            margin-top: 120px;
+            padding-bottom: 20px; /* Space for footer */
+        }
+
+        .audio-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        .visualizer {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 30px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .visualizer-bars {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+        }
+
+        .bar {
+            width: 4px;
+            background-color: var(--secondary);
+            border-radius: 2px;
+            transition: height 0.1s;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary);
+            color: var(--text);
+        }
+
+        .btn-primary:hover {
+            background-color: #0d5a12;
+        }
+
+        .btn-primary.recording {
+            background-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .recording-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .recording-indicator.active {
+            opacity: 1;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Footer Styles */
+        footer {
+            padding: 20px;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.2);
+            position: relative;
+            margin-top: auto;
+            z-index: 90; /* Rodapé fica abaixo de tudo */
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .social-icon {
+            font-size: 20px;
+            color: var(--text);
+            transition: color 0.3s;
+        }
+
+        .social-icon:hover {
+            color: var(--secondary);
+        }
+
+        .copyright {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .sidebar .carousel {
+            display: none;
+        }
+
+        /* Estilo do Ícone de Balão */
+        #chatbotToggle {
+            display: none;
+        }
+
+        /* Novo posicionamento dentro do menu */
+        .chatbot-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 300px;
+            border-radius: 0;
+            box-shadow: none;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Botão de toggle no menu */
+        .menu-item.chatbot-toggle {
+            margin-top: auto; /* Posiciona no final */
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item.chatbot-toggle:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .menu-item.chatbot-toggle .chatbot-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #19eb69 0%, #0d5a12 100%);
+            border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
+            color: white;
+            border: 2px solid white;
         }
-        #toggleAudio {
-            font-size: 18px;
-            padding: 10px 20px;
-            cursor: pointer;
-            background-color: #4CAF50;
+
+        /* Container do Chatbot */
+        .chatbot-container {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            max-height: 0;
+            overflow: hidden;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: all 0.5s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .chatbot-container.active {
+            max-height: 500px;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, #112809 0%, #1a3a0e 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-messages {
+            padding: 15px;
+            height: 300px;
+            overflow-y: auto;
+            background: #f9f9f9;
+        }
+
+        .chatbot-input {
+            display: flex;
+            padding: 10px 15px;
+            background: white;
+            border-radius: 0 0 20px 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            outline: none;
+        }
+
+        .chatbot-input button {
+            margin-left: 10px;
+            background: #19eb69;
             color: white;
             border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
         }
-        #toggleAudio:hover {
-            background-color: #45a049;
+
+        /* Estilo do Mixer */
+        .audio-mixer {
+            background: #2c3e50;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .mixer-title {
+            color: #ecf0f1;
+            margin-bottom: 15px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mixer-controls {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .mixer-channel {
+            min-width: 80px;
+            background: #34495e;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .channel-name {
+            color: #bdc3c7;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .channel-fader {
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .fader-knob {
+            width: 30px;
+            height: 100px;
+            background: #7f8c8d;
+            border-radius: 4px;
+            position: relative;
+            margin: 10px 0;
+        }
+
+        .fader-handle {
+            width: 40px;
+            height: 8px;
+            background: #3498db;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Estilos aprimorados do Mixer */
+        .mixer-channel {
+            min-width: 120px;
+            background: #34495e;
+            padding: 15px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .eq-controls {
+            display: flex;
+            gap: 8px;
+            margin: 10px 0;
+        }
+
+        .eq-band {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .eq-label {
+            font-size: 12px;
+            color: #bdc3c7;
+            margin-bottom: 5px;
+        }
+
+        .eq-fader {
+            height: 80px;
+            width: 20px;
+            background: #2c3e50;
+            border-radius: 3px;
+            position: relative;
+        }
+
+        .eq-handle {
+            width: 24px;
+            height: 8px;
+            background: #9b59b6;
+            border-radius: 3px;
+            cursor: pointer;
+            position: absolute;
+            left: -2px;
+        }
+
+        .preset-selector {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .preset-btn {
+            background: none;
+            border: 1px solid #3498db;
+            color: #3498db;
+            border-radius: 3px;
+            padding: 2px 5px;
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+        .preset-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 20px;
+            background: #2c3e50;
+            border-radius: 5px;
+            padding: 5px;
+            z-index: 10;
+        }
+
+        .preset-menu.show {
+            display: block;
+        }
+
+        .preset-option {
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .preset-option:hover {
+            background: #3498db;
+            color: white;
+        }
+
+        /* Novo posicionamento do volume principal */
+        .master-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #2c3e50;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .master-volume {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .master-fader {
+            width: 150px;
+            height: 20px;
+            background: #34495e;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .master-handle {
+            width: 15px;
+            height: 25px;
+            background: #3498db;
+            border-radius: 5px;
+            position: absolute;
+            top: -2.5px;
+            cursor: pointer;
+        }
+
+        /* Seção de Equalização */
+        .eq-section {
+            margin-top: 20px;
         }
     </style>
 </head>
+
 <body>
-    <button id="toggleAudio">Start Audio</button>
+    <!-- Carousel for Ads at Top -->
+    <div class="top-carousel">
+        <div class="carousel-track">
+            <div class="carousel-slide">
+                <img src="ads/ad1.jpg" alt="Publicidade 1">
+            </div>
+            <div class="carousel-slide">
+                <img src="ads/ad2.jpg" alt="Publicidade 2">
+            </div>
+            <div class="carousel-slide">
+                <img src="ads/ad3.jpg" alt="Publicidade 3">
+            </div>
+            <div class="carousel-slide">
+                <img src="ads/ad4.jpg" alt="Publicidade 4">
+            </div>
+            <div class="carousel-slide">
+                <img src="ads/ad5.jpg" alt="Publicidade 5">
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo" id="toggleSidebar">
+            <div class="logo-icon">
+                <i class="fas fa-microphone-alt"></i>
+            </div>
+            <div class="logo-text">ControlSpeak</div>
+        </div>
+
+        <div class="menu">
+            <div class="menu-item active">
+                <i class="fas fa-home"></i>
+                <div class="menu-text">Home</div>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-user"></i>
+                <div class="menu-text">Profile</div>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-podcast"></i>
+                <div class="menu-text">Podcasts</div>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-heart"></i>
+                <div class="menu-text">Favorites</div>
+            </div>
+            <div class="menu-item" id="collections-menu">
+                <i class="fas fa-folder"></i>
+                <div class="menu-text">Collections</div>
+                <div class="submenu" id="collections-submenu">
+                    <div class="submenu-item">Musics</div>
+                    <div class="submenu-item">Recordings</div>
+                    <div class="submenu-item">Effects</div>
+                    <div class="submenu-item">Projects</div>
+                </div>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-info-circle"></i>
+                <div class="menu-text">About Us</div>
+            </div>
+            <!-- Novo item para toggle do chatbot -->
+            <div class="menu-item chatbot-toggle" id="menuChatbotToggle">
+                <div class="chatbot-icon">
+                    <i class="fas fa-comment-dots"></i>
+                </div>
+                <span class="menu-text">Assistente</span>
+            </div>
+        </div>
+        <!-- Container do chatbot -->
+        <div class="chatbot-container" id="chatbotContainer">
+            <div class="chatbot-header">
+                <h3>Assistente ControlSpeak</h3>
+                <button id="closeChatbot"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="message bot">Olá! Como posso ajudar você hoje?</div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbotInput" placeholder="Digite sua mensagem...">
+                <button id="sendMessage"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Recording Indicator -->
+        <div class="recording-indicator" id="recordingIndicator"></div>
+
+        <!-- Audio Controls -->
+        <div class="audio-controls">
+            <!-- Audio Visualizer -->
+            <div class="visualizer">
+                <div class="visualizer-bars" id="visualizer"></div>
+            </div>
+
+            <!-- Mixer de Som -->
+            <div class="audio-mixer">
+                <!-- Controle Mestre de Áudio -->
+                <div class="master-controls">
+                    <div class="master-volume">
+                        <i class="fas fa-volume-down"></i>
+                        <div class="master-fader">
+                            <div class="master-handle" style="left: 50%;"></div>
+                        </div>
+                        <i class="fas fa-volume-up"></i>
+                    </div>
+                </div>
+
+                <!-- Seção de Equalização -->
+                <div class="eq-section">
+                    <div class="mixer-title">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Equalização</span>
+                    </div>
+                    
+                    <div class="eq-controls">
+                        <!-- Controles de EQ (Graves/Médios/Agudos) -->
+                        <div class="mixer-channel">
+                            <div class="channel-name">Voz</div>
+                            
+                            <!-- Controle de EQ -->
+                            <div class="eq-controls">
+                                <div class="eq-band">
+                                    <span class="eq-label">Graves</span>
+                                    <div class="eq-fader">
+                                        <div class="eq-handle" style="top: 50%;"></div>
+                                    </div>
+                                </div>
+                                <div class="eq-band">
+                                    <span class="eq-label">Médios</span>
+                                    <div class="eq-fader">
+                                        <div class="eq-handle" style="top: 50%;"></div>
+                                    </div>
+                                </div>
+                                <div class="eq-band">
+                                    <span class="eq-label">Agudos</span>
+                                    <div class="eq-fader">
+                                        <div class="eq-handle" style="top: 50%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Fader principal -->
+                            <div class="channel-fader">
+                                <i class="fas fa-volume-up"></i>
+                                <div class="fader-knob">
+                                    <div class="fader-handle"></div>
+                                </div>
+                                <i class="fas fa-volume-down"></i>
+                            </div>
+                            
+                            <!-- Presets -->
+                            <div class="preset-selector">
+                                <button class="preset-btn">Presets <i class="fas fa-caret-down"></i></button>
+                                <div class="preset-menu">
+                                    <div class="preset-option" data-eq="pop">Pop</div>
+                                    <div class="preset-option" data-eq="rock">Rock</div>
+                                    <div class="preset-option" data-eq="hiphop">Hip Hop</div>
+                                    <div class="preset-option" data-eq="classical">Clássico</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Control Buttons -->
+            <div class="control-buttons">
+                <button class="btn btn-primary" id="toggleAudio">Start Recording</button>
+                <button class="btn btn-secondary" id="saveButton">
+                    <i class="fas fa-save"></i> Save
+                </button>
+                <button class="btn btn-secondary" id="effectsButton">
+                    <i class="fas fa-sliders-h"></i> Effects
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="social-icons">
+                <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-spotify"></i></a>
+            </div>
+            <div class="copyright">
+                &copy; 2025 ControlSpeak. All rights reserved.
+            </div>
+        </footer>
+    </div>
 
     <script>
-        // Create audio context
-        const BUFFER_SIZE = 4800;
-        class Player {
-            constructor() {
-                this.playbackNode = null;
-            }
-
-            async init(sampleRate) {
-                const audioContext = new AudioContext({ sampleRate });
-                await audioContext.audioWorklet.addModule("/audio-playback-worklet.js");
-
-                this.playbackNode = new AudioWorkletNode(audioContext, "audio-playback-worklet");
-                this.playbackNode.connect(audioContext.destination);
-            }
-
-            play(buffer) {
-                if (this.playbackNode) {
-                    this.playbackNode.port.postMessage(buffer);
-                }
-            }
-
-            stop() {
-                if (this.playbackNode) {
-                    this.playbackNode.port.postMessage(null);
-                }
-            }
-        }
-
-        class Recorder {
-            constructor(onDataAvailable) {
-                this.onDataAvailable = onDataAvailable;
-                this.audioContext = null;
-                this.mediaStream = null;
-                this.mediaStreamSource = null;
-                this.workletNode = null;
-            }
-
-            async start(stream) {
-                console.log('starting')
-                try {
-                    if (this.audioContext) {
-                        await this.audioContext.close();
-                    }
-
-                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 24000 });
-                    console.log('1')
-
-                    await this.audioContext.audioWorklet.addModule("/audio-processor-worklet.js");
-                    console.log('2')
-
-                    this.mediaStream = stream;
-                    this.mediaStreamSource = this.audioContext.createMediaStreamSource(this.mediaStream);
-
-                    this.workletNode = new AudioWorkletNode(this.audioContext, "audio-processor-worklet");
-                    this.workletNode.port.onmessage = event => {
-                        this.onDataAvailable(event.data.buffer);
-                    };
-
-                    this.mediaStreamSource.connect(this.workletNode);
-                    this.workletNode.connect(this.audioContext.destination);
-                    console.log('done')
-                } catch (error) {
-                    console.log('error', error)
-                    this.stop();
-                }
-            }
-
-            async stop() {
-                if (this.mediaStream) {
-                    this.mediaStream.getTracks().forEach(track => track.stop());
-                    this.mediaStream = null;
-                }
-
-                if (this.audioContext) {
-                    await this.audioContext.close();
-                    this.audioContext = null;
-                }
-
-                this.mediaStreamSource = null;
-                this.workletNode = null;
-            }
-        }
-
-
-
-
-        // Function to get microphone input and send it to WebSocket
-        async function startAudio() {
-            try {
-
-                // handle output -> speaker stuff
-                const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-
-                // Get the hostname (domain + port)
-                const hostname = window.location.host;
-
-                // Create dynamic WebSocket URL
-                const ws = new WebSocket(`${wsProtocol}//${hostname}/ws`);
-
-                const audioPlayer = new Player();
-                audioPlayer.init(24000);
-
-                ws.onmessage = event => {
-
-                    const data = JSON.parse(event.data);
-                    if (data?.type !== 'response.audio.delta') return;
-
-                    const binary = atob(data.delta);
-                    const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
-                    const pcmData = new Int16Array(bytes.buffer);
-
-                    audioPlayer.play(pcmData);
-                };
-
-                let buffer = new Uint8Array();
-
-                const appendToBuffer = (newData) => {
-                    const newBuffer = new Uint8Array(buffer.length + newData.length);
-                    newBuffer.set(buffer);
-                    newBuffer.set(newData, buffer.length);
-                    buffer = newBuffer;
-                };
-
-                const handleAudioData = (data) => {
-                    const uint8Array = new Uint8Array(data);
-                    appendToBuffer(uint8Array);
-
-                    if (buffer.length >= BUFFER_SIZE) {
-                        const toSend = new Uint8Array(buffer.slice(0, BUFFER_SIZE));
-                        buffer = new Uint8Array(buffer.slice(BUFFER_SIZE));
-
-                        const regularArray = String.fromCharCode(...toSend);
-                        const base64 = btoa(regularArray);
-
-                        ws.send(JSON.stringify({type: 'input_audio_buffer.append', audio: base64}));
-                    }
-                };
-
-                // handle microphone -> input websocket
-                const audioRecorder = new Recorder(handleAudioData);
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
-                await audioRecorder.start(stream);
-
-
-            } catch (error) {
-                console.error('Error accessing the microphone', error);
-                alert('Error accessing the microphone. Please check your settings and try again.');
-            }
-        }
-
-        // Button to toggle audio
-        const toggleButton = document.getElementById('toggleAudio');
-        let isAudioOn = false;
-
-        toggleButton.addEventListener('click', async () => {
-            if (!isAudioOn) {
-                await startAudio();
-                toggleButton.textContent = 'Stop Audio';
-                isAudioOn = true;
-            } else {
-                // audioContext.suspend();
-                toggleButton.textContent = 'Start Audio';
-                isAudioOn = false;
+        // Controle do Menu Lateral
+        const sidebar = document.getElementById('sidebar');
+        const toggleSidebarBtn = document.getElementById('toggleSidebar');
+        
+        toggleSidebarBtn.addEventListener('click', () => {
+            const isCollapsed = sidebar.classList.toggle('collapsed');
+            
+            // Ajustar carrossel
+            const carousel = document.querySelector('.top-carousel');
+            if (carousel) {
+                carousel.style.width = isCollapsed ? `calc(100% - var(--collapsed-sidebar))` : `calc(100% - var(--sidebar-width))`;
+                carousel.style.transition = 'width 0.3s ease';
             }
         });
 
+        // Sistema unificado de controle de áudio
+        const audioToggleBtn = document.getElementById('toggleAudio');
+        let isRecording = false;
+        let mediaRecorder;
+        let audioChunks = [];
+
+        // Sistema de Chatbot
+        const chatbotToggle = document.getElementById('chatbotToggle');
+        const chatbotContainer = document.getElementById('chatbotContainer');
+        const closeChatbot = document.getElementById('closeChatbot');
+        const chatbotMessages = document.getElementById('chatbotMessages');
+        const chatbotInput = document.getElementById('chatbotInput');
+        const sendMessageBtn = document.getElementById('sendMessage');
+
+        // Novo controle pelo menu
+        document.getElementById('menuChatbotToggle').addEventListener('click', function() {
+            document.getElementById('chatbotContainer').classList.toggle('active');
+        });
+
+        // Controle do Chatbot
+        closeChatbot.addEventListener('click', function() {
+            chatbotContainer.classList.remove('active');
+        });
+        sendMessageBtn.addEventListener('click', sendMessage);
+        chatbotInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        function addMessage(text, isBot = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = isBot ? 'message bot' : 'message user';
+            messageDiv.textContent = text;
+            chatbotMessages.appendChild(messageDiv);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+
+        function sendMessage() {
+            const message = chatbotInput.value.trim();
+            if (message) {
+                addMessage(message);
+                chatbotInput.value = '';
+                setTimeout(() => {
+                    addMessage('Estou aqui para ajudar com gravações e configurações de áudio. Em que posso ajudar?', true);
+                }, 1000);
+            }
+        }
+
+        // Sistema de Gravação
+        audioToggleBtn.addEventListener('click', async () => {
+            if (!isRecording) {
+                await startRecording();
+            } else {
+                stopRecording();
+            }
+        });
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                
+                mediaRecorder.ondataavailable = (e) => {
+                    audioChunks.push(e.data);
+                };
+                
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    // Aqui você pode salvar ou processar o áudio
+                    console.log('Áudio gravado:', audioBlob);
+                    audioChunks = [];
+                };
+                
+                mediaRecorder.start();
+                isRecording = true;
+                updateRecordingUI();
+            } catch (err) {
+                console.error('Erro ao acessar microfone:', err);
+                alert('Permissão negada. Por favor, habilite o microfone.');
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                isRecording = false;
+                updateRecordingUI();
+            }
+        }
+
+        function updateRecordingUI() {
+            if (isRecording) {
+                audioToggleBtn.textContent = 'Parar Gravação';
+                audioToggleBtn.classList.add('recording');
+            } else {
+                audioToggleBtn.textContent = 'Iniciar Gravação';
+                audioToggleBtn.classList.remove('recording');
+            }
+        }
+
+        // Controle do Carrossel
+        const carouselTrack = document.querySelector('.carousel-track');
+        const slides = document.querySelectorAll('.carousel-slide');
+        let currentIndex = 0;
+        
+        function moveToSlide(index) {
+            carouselTrack.style.transform = `translateX(-${index * 100}%)`;
+            currentIndex = index;
+        }
+        
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % slides.length;
+            moveToSlide(currentIndex);
+        }
+        
+        // Iniciar transição automática
+        setInterval(nextSlide, 5000);
+        
+        // Ajuste inicial para menu recolhido/expandido
+        const carousel = document.querySelector('.top-carousel');
+        if (carousel) {
+            carousel.style.width = sidebar.classList.contains('collapsed') ? `calc(100% - var(--collapsed-sidebar))` : `calc(100% - var(--sidebar-width))`;
+        }
+
+        // Controle dos presets
+        document.querySelectorAll('.preset-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Lógica para aplicar os presets
+                const preset = this.getAttribute('data-eq');
+                alert(`Preset ${preset} aplicado!`);
+                // Aqui você implementaria a lógica real de equalização
+            });
+        });
+
+        // Mostrar/ocultar menu de presets
+        document.querySelector('.preset-btn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.querySelector('.preset-menu').classList.toggle('show');
+        });
+
+        // Fechar menu ao clicar fora
+        document.addEventListener('click', function() {
+            document.querySelector('.preset-menu').classList.remove('show');
+        });
     </script>
 </body>
 </html>

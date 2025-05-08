@@ -15,7 +15,6 @@
             --sidebar-width: 250px;
             --collapsed-sidebar: 80px;
         }
-
         * {
             margin: 0;
             padding: 0;
@@ -61,6 +60,32 @@
         }
 
         .logo {
+            .app-header {
+                padding: 10px 20px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                flex-shrink: 0;
+            }
+
+            .menu-toggle-btn {
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 5px;
+                border-radius: 4px;
+                transition: background 0.3s ease;
+            }
+
+            .menu-toggle-btn:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            .menu-icon {
+                width: 24px;
+                height: 24px;
+            }
             text-align: center;
             margin-bottom: 20px;
             display: flex;
@@ -121,48 +146,87 @@
         }
 
         /* Carousel Styles */
-        .top-carousel {
+        .ads-carousel {
             position: fixed;
             top: 0;
+            left: 0;
             right: 0;
-            width: 98%;
-            margin: 0 auto;
-            max-width: 1800px;
+            height: 30vh;
+            z-index: 105;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            z-index: 90; /* Abaixo do menu (100) mas acima do conteúdo */
             transition: all 0.3s ease;
-            height: 180px; /* Máximo possível com segurança */
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* Sombra mais leve */
         }
 
-        .sidebar.collapsed ~ .top-carousel {
-            width: calc(98% - var(--collapsed-sidebar));
+        .sidebar.collapsed ~ .ads-carousel {
+            left: var(--collapsed-sidebar);
+        }
+
+        .carousel-container {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
         }
 
         .carousel-track {
             display: flex;
-            transition: transform 0.5s ease;
+            width: 100%;
             height: 100%;
+            transition: transform 0.5s ease;
         }
 
-        .carousel-slide {
+        .ad-slide {
             min-width: 100%;
             height: 100%;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background-size: cover;
             background-position: center;
         }
 
-        .slide-content {
-            background: rgba(0, 0, 0, 0.7);
+        .ad-content {
+            max-width: 800px;
+            text-align: center;
             color: white;
+            background: rgba(0, 0, 0, 0.8);
             padding: 30px;
-            border-radius: 10px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        .slide-logo {
+        .ad-logo {
             height: 80px;
+            margin-bottom: 20px;
+        }
+
+        .ad-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .ad-description {
+            font-size: 1rem;
+            opacity: 0.9;
             margin-bottom: 15px;
+        }
+
+        .ad-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        .ad-button:hover {
+            background: #0056b3;
         }
 
         /* Main Content Styles */
@@ -1015,35 +1079,42 @@
 </head>
 
 <body>
-    <!-- Carousel for Ads at Top -->
-    <div class="top-carousel">
-        <div class="carousel-track">
-            <div class="carousel-slide" style="background-image: url('ad1.jpg');">
-                <div class="slide-content">
-                    <img src="controllspeak_logo.svg" class="slide-logo">
-                    <h3>Gravação por Comando de Voz</h3>
-                    <p>Controle total através de comandos de voz</p>
+    
+    <!-- Publicidade em Destaque -->
+    <div class="ads-carousel">
+        <div class="carousel-container">
+            <div class="carousel-track">
+                <div class="ad-slide" style="background-image: url('ad1.jpg');">
+                    <div class="ad-content">
+                        <img src="controllspeak_logo.svg" class="ad-logo" alt="Logo">
+                        <h3 class="ad-title">Gravação por Comando de Voz</h3>
+                        <p class="ad-description">Controle total através de comandos de voz</p>
+                        <a href="#" class="ad-button">Saiba Mais</a>
+                    </div>
                 </div>
-            </div>
-            <div class="carousel-slide" style="background-image: url('ad2.jpg');">
-                <div class="slide-content">
-                    <img src="controllspeak_logo.svg" class="slide-logo">
-                    <h3>Armazenamento no MongoDB</h3>
-                    <p>Dados seguros e escaláveis</p>
+                <div class="ad-slide" style="background-image: url('ad2.jpg');">
+                    <div class="ad-content">
+                        <img src="controllspeak_logo.svg" class="ad-logo" alt="Logo">
+                        <h3 class="ad-title">Armazenamento no MongoDB</h3>
+                        <p class="ad-description">Dados seguros e escaláveis</p>
+                        <a href="#" class="ad-button">Saiba Mais</a>
+                    </div>
                 </div>
-            </div>
-            <div class="carousel-slide" style="background-image: url('ad3.jpg');">
-                <div class="slide-content">
-                    <img src="controllspeak_logo.svg" class="slide-logo">
-                    <h3>Interface Intuitiva</h3>
-                    <p>Controles simples e eficientes</p>
+                <div class="ad-slide" style="background-image: url('ad3.jpg');">
+                    <div class="ad-content">
+                        <img src="controllspeak_logo.svg" class="ad-logo" alt="Logo">
+                        <h3 class="ad-title">Interface Intuitiva</h3>
+                        <p class="ad-description">Controles simples e eficientes</p>
+                        <a href="#" class="ad-button">Saiba Mais</a>
+                    </div>
                 </div>
-            </div>
-            <div class="carousel-slide" style="background-image: url('ad4.jpg');">
-                <div class="slide-content">
-                    <img src="controllspeak_logo.svg" class="slide-logo">
-                    <h3>Tecnologia Avançada</h3>
-                    <p>Processamento de áudio em tempo real</p>
+                <div class="ad-slide" style="background-image: url('ad4.jpg');">
+                    <div class="ad-content">
+                        <img src="controllspeak_logo.svg" class="ad-logo" alt="Logo">
+                        <h3 class="ad-title">Tecnologia Avançada</h3>
+                        <p class="ad-description">Processamento de áudio em tempo real</p>
+                        <a href="#" class="ad-button">Saiba Mais</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1230,395 +1301,192 @@
     </div>
 
     <script>
-        // Configuração dos presets
-        const presets = {
-            pop: { bass: 0.7, mid: 0.5, treble: 0.8 },
-            rock: { bass: 0.8, mid: 0.7, treble: 0.6 },
-            hiphop: { bass: 0.9, mid: 0.6, treble: 0.5 },
-            classical: { bass: 0.5, mid: 0.7, treble: 0.9 }
-        };
-
-        // Elementos do mixer
-        const masterHandle = document.querySelector('.master-handle');
-        const eqHandles = document.querySelectorAll('.eq-handle');
-        const presetOptions = document.querySelectorAll('.preset-option');
-
-        // Controle do volume mestre
-        let masterVolume = 0.5;
-        masterHandle.style.left = `${masterVolume * 100}%`;
-
-        // Controle dos EQ (inicialmente neutro)
-        let eqSettings = { bass: 0.5, mid: 0.5, treble: 0.5 };
-
-        // Aplicar preset
-        presetOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                const presetType = this.getAttribute('data-eq');
-                eqSettings = presets[presetType];
+        // Módulo de Controle de Menu
+        (function() {
+            const sidebar = document.getElementById('sidebar');
+            const toggleBtn = document.getElementById('menuToggle');
+            
+            toggleBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                sidebar.classList.toggle('collapsed');
                 
-                // Atualizar posições dos faders
-                eqHandles[0].style.top = `${100 - (eqSettings.bass * 100)}%`; // Graves
-                eqHandles[1].style.top = `${100 - (eqSettings.mid * 100)}%`;  // Médios
-                eqHandles[2].style.top = `${100 - (eqSettings.treble * 100)}%`; // Agudos
-                
-                // Feedback visual
-                this.parentElement.classList.remove('show');
-            });
-        });
-
-        // Mostrar/ocultar menu de presets
-        document.querySelector('.preset-btn').addEventListener('click', function(e) {
-            e.stopPropagation();
-            document.querySelector('.preset-menu').classList.toggle('show');
-        });
-
-        // Fechar menu ao clicar fora
-        document.addEventListener('click', function() {
-            document.querySelector('.preset-menu').classList.remove('show');
-        });
-
-        // Configuração do Visualizador de Ondas
-        const canvas = document.getElementById('waveCanvas');
-        const ctx = canvas.getContext('2d');
-        let audioContext, analyser, dataArray, animationId;
-        
-        // Ajustar tamanho do canvas
-        function resizeCanvas() {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-        }
-        
-        // Iniciar análise de áudio
-        function startWaveAnalysis(stream) {
-            resizeCanvas();
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            
-            // Adicionar nó de ganho para controlar intensidade
-            const gainNode = audioContext.createGain();
-            gainNode.gain.value = 1.5; // Aumento base
-            
-            analyser = audioContext.createAnalyser();
-            analyser.fftSize = 2048;
-            
-            const source = audioContext.createMediaStreamSource(stream);
-            source.connect(gainNode);
-            gainNode.connect(analyser);
-            analyser.connect(audioContext.destination);
-            
-            // Analisar volume em tempo real
-            const meter = audioContext.createScriptProcessor(2048, 1, 1);
-            let volume = 0;
-            
-            meter.onaudioprocess = function(e) {
-                const input = e.inputBuffer.getChannelData(0);
-                let sum = 0;
-                
-                for (let i = 0; i < input.length; i++) {
-                    sum += Math.abs(input[i]);
-                }
-                
-                volume = Math.max(volume, sum / input.length);
-            };
-            
-            gainNode.connect(meter);
-            meter.connect(audioContext.destination);
-            
-            dataArray = new Uint8Array(analyser.frequencyBinCount);
-            drawWave(volume);
-        }
-
-        // Desenhar onda
-        function drawWave(currentVolume) {
-            animationId = requestAnimationFrame(() => drawWave(currentVolume));
-            analyser.getByteTimeDomainData(dataArray);
-            
-            ctx.fillStyle = '#0a0a15';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Ajustar intensidade com base no volume
-            const intensity = 1 + (currentVolume * 5); // Multiplicador de intensidade
-            ctx.lineWidth = 2 * intensity;
-            ctx.strokeStyle = `hsl(${120 - (currentVolume * 60)}, 100%, 50%)`;
-            
-            ctx.beginPath();
-            const sliceWidth = canvas.width * 1.0 / analyser.frequencyBinCount;
-            let x = 0;
-            
-            for(let i = 0; i < analyser.frequencyBinCount; i++) {
-                const v = (dataArray[i] / 128.0) * intensity; // Aplicar intensidade
-                const y = v * canvas.height / 2;
-                
-                if(i === 0) {
-                    ctx.moveTo(x, y);
-                } else {
-                    ctx.lineTo(x, y);
-                }
-                
-                x += sliceWidth;
-            }
-            
-            ctx.lineTo(canvas.width, canvas.height/2);
-            ctx.stroke();
-        }
-
-        // Parar visualização
-        function stopWaveVisualizer() {
-            cancelAnimationFrame(animationId);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            if (audioContext) {
-                audioContext.close();
-                audioContext = null;
-            }
-        }
-
-        // Integrar com botão de gravação
-        document.getElementById('toggleAudio').addEventListener('click', function() {
-            if (this.textContent.includes('Start')) {
-                navigator.mediaDevices.getUserMedia({ audio: true })
-                    .then(startWaveAnalysis)
-                    .catch(err => console.error('Erro ao acessar microfone:', err));
-            } else {
-                stopWaveVisualizer();
-            }
-        });
-        
-        // Configurar redimensionamento
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-        
-        // Controle da janela
-        document.getElementById('assistantTrigger').addEventListener('click', function() {
-            document.getElementById('assistantWindow').classList.toggle('active');
-        });
-        
-        document.querySelector('.btn-close').addEventListener('click', function() {
-            document.getElementById('assistantWindow').classList.remove('active');
-        });
-        
-        // Lógica do chat
-        document.getElementById('sendButton').addEventListener('click', sendMessage);
-        
-        function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const message = input.value.trim();
-            if(message) {
-                addMessage('user', message);
-                input.value = '';
-                // Simular resposta
-                setTimeout(() => {
-                    addMessage('assistant', 'Processando sua solicitação...');
-                }, 500);
-            }
-        }
-        
-        function addMessage(sender, text) {
-            const history = document.getElementById('chatHistory');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}`;
-            messageDiv.textContent = text;
-            history.appendChild(messageDiv);
-            history.scrollTop = history.scrollHeight;
-        }
-
-        // Controle do Menu Lateral
-        const sidebar = document.getElementById('sidebar');
-        const toggleSidebarBtn = document.getElementById('menuToggle');
-        
-        toggleSidebarBtn.addEventListener('click', function() {
-            sidebar.classList.toggle('collapsed');
-        });
-
-        // Sistema unificado de controle de áudio
-        const audioToggleBtn = document.getElementById('toggleAudio');
-        let isRecording = false;
-        let mediaRecorder;
-        let audioChunks = [];
-
-        // Sistema de Chatbot
-        const chatbotToggle = document.getElementById('chatbotToggle');
-        const chatbotContainer = document.getElementById('chatbotContainer');
-        const closeChatbot = document.getElementById('closeChatbot');
-        const chatbotMessages = document.getElementById('chatbotMessages');
-        const chatbotInput = document.getElementById('chatbotInput');
-        const sendMessageBtn = document.getElementById('sendMessage');
-
-        // Novo controle pelo menu
-        document.getElementById('assistantMenuItem').addEventListener('click', function() {
-            document.getElementById('assistantMenuItem').classList.toggle('active');
-        });
-
-        // Controle do Chatbot
-        document.querySelector('#assistantMenuItem .btn-send').addEventListener('click', sendMessage);
-        
-        function sendMessage() {
-            const input = document.querySelector('#assistantMenuItem .message-input');
-            const message = input.value.trim();
-            if(message) {
-                addMessage('user', message);
-                input.value = '';
-                // Simular resposta
-                setTimeout(() => {
-                    addMessage('assistant', 'Mensagem recebida: ' + message);
-                }, 500);
-            }
-        }
-        
-        function addMessage(sender, text) {
-            const history = document.querySelector('#assistantMenuItem .conversation-history');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}`;
-            messageDiv.textContent = text;
-            history.appendChild(messageDiv);
-            history.scrollTop = history.scrollHeight;
-        }
-
-        // Sistema de Gravação
-        audioToggleBtn.addEventListener('click', async () => {
-            if (!isRecording) {
-                await startRecording();
-            } else {
-                stopRecording();
-            }
-        });
-
-        async function startRecording() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                mediaRecorder = new MediaRecorder(stream);
-                
-                mediaRecorder.ondataavailable = (e) => {
-                    audioChunks.push(e.data);
-                };
-                
-                mediaRecorder.onstop = () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                    // Aqui você pode salvar ou processar o áudio
-                    console.log('Áudio gravado:', audioBlob);
-                    audioChunks = [];
-                };
-                
-                mediaRecorder.start();
-                isRecording = true;
-                updateRecordingUI();
-                
-                // Iniciar visualização de ondas
-                startWaveAnalysis(stream);
-            } catch (err) {
-                console.error('Erro ao acessar microfone:', err);
-                alert('Permissão negada. Por favor, habilite o microfone.');
-            }
-        }
-
-        function stopRecording() {
-            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-                mediaRecorder.stop();
-                isRecording = false;
-                updateRecordingUI();
-                
-                // Parar visualização de ondas
-                stopWaveVisualizer();
-            }
-        }
-
-        function updateRecordingUI() {
-            if (isRecording) {
-                audioToggleBtn.textContent = 'Parar Gravação';
-                audioToggleBtn.classList.add('recording');
-            } else {
-                audioToggleBtn.textContent = 'Iniciar Gravação';
-                audioToggleBtn.classList.remove('recording');
-            }
-        }
-
-        // Controle do Carrossel
-        const carouselTrack = document.querySelector('.carousel-track');
-        const slides = document.querySelectorAll('.carousel-slide');
-        let currentIndex = 0;
-        
-        function moveToSlide(index) {
-            carouselTrack.style.transform = `translateX(-${index * 100}%)`;
-            currentIndex = index;
-        }
-        
-        function nextSlide() {
-            currentIndex = (currentIndex + 1) % slides.length;
-            moveToSlide(currentIndex);
-        }
-        
-        // Iniciar transição automática
-        let interval = setInterval(nextSlide, 5000);
-        
-        // Ajuste inicial para menu recolhido/expandido
-        const carousel = document.querySelector('.top-carousel');
-        if (carousel) {
-            carousel.style.width = sidebar.classList.contains('collapsed') ? `calc(98% - var(--collapsed-sidebar))` : `calc(98% - var(--sidebar-width))`;
-        }
-
-        // Controle dos presets
-        document.querySelectorAll('.preset-option').forEach(option => {
-            option.addEventListener('click', function() {
-                // Lógica para aplicar os presets
-                const preset = this.getAttribute('data-eq');
-                alert(`Preset ${preset} aplicado!`);
-                // Aqui você implementaria a lógica real de equalização
-            });
-        });
-
-        // Sistema de arrastar para os controles
-        function setupDrag(handle, isMaster = false) {
-            let isDragging = false;
-            
-            handle.addEventListener('mousedown', () => isDragging = true);
-            
-            document.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                
-                const rect = handle.parentElement.getBoundingClientRect();
-                let position;
-                
-                if (isMaster) {
-                    position = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
-                    handle.style.left = `${position * 100}%`;
-                    masterVolume = position;
-                } else {
-                    position = Math.min(1, Math.max(0, (rect.bottom - e.clientY) / rect.height));
-                    handle.style.top = `${100 - (position * 100)}%`;
-                    
-                    // Atualizar configurações de EQ
-                    const index = Array.from(eqHandles).indexOf(handle);
-                    if (index === 0) eqSettings.bass = position;
-                    else if (index === 1) eqSettings.mid = position;
-                    else if (index === 2) eqSettings.treble = position;
+                // Ajustar largura do carrossel
+                const carousel = document.querySelector('.ads-carousel');
+                if (carousel) {
+                    carousel.style.width = sidebar.classList.contains('collapsed') 
+                        ? `calc(100% - var(--sidebar-width))` 
+                        : `calc(100% - var(--collapsed-sidebar))`;
                 }
             });
-            
-            document.addEventListener('mouseup', () => isDragging = false);
-        }
+        })();
 
-        // Configurar arraste para todos os controles
-        setupDrag(masterHandle, true);
-        eqHandles.forEach(handle => setupDrag(handle));
-
-        // Configuração do Carrossel
-        const initCarousel = () => {
+        // Módulo de Carrossel
+        (function() {
             const track = document.querySelector('.carousel-track');
-            const slides = document.querySelectorAll('.carousel-slide');
-            if(!slides.length) return;
-            
-            let currentIndex = 0;
-            
-            // Função básica de transição
-            const nextSlide = () => {
-                currentIndex = (currentIndex + 1) % slides.length;
-                track.style.transform = `translateX(-${currentIndex * 100}%)`;
-                track.style.transition = 'transform 0.5s ease';
-            };
-            
-            // Rotação automática simples
-            setInterval(nextSlide, 5000);
-        };
+            const slides = document.querySelectorAll('.ad-slide');
+            let current = 0;
+            let interval;
 
-        document.addEventListener('DOMContentLoaded', initCarousel);
+            function move(index) {
+                if (index < 0) index = slides.length - 1;
+                if (index >= slides.length) index = 0;
+                track.style.transform = `translateX(-${index * 100}%)`;
+                current = index;
+            }
+
+            function next() {
+                current = (current + 1) % slides.length;
+                move(current);
+            }
+
+            // Iniciar transição automática
+            interval = setInterval(next, 5000);
+        })();
+
+        // Módulo de Gravação
+        (function() {
+            const toggleBtn = document.getElementById('toggleAudio');
+            let isRecording = false;
+            let recorder;
+            let chunks = [];
+
+            async function start() {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    recorder = new MediaRecorder(stream);
+                    
+                    recorder.ondataavailable = (e) => chunks.push(e.data);
+                    recorder.onstop = () => {
+                        const blob = new Blob(chunks, { type: 'audio/wav' });
+                        console.log('Áudio gravado:', blob);
+                        chunks = [];
+                    };
+                    
+                    recorder.start();
+                    isRecording = true;
+                    updateUI();
+                } catch (err) {
+                    console.error('Erro ao acessar microfone:', err);
+                    alert('Permissão negada. Por favor, habilite o microfone.');
+                }
+            }
+
+            function stop() {
+                if (recorder && recorder.state !== 'inactive') {
+                    recorder.stop();
+                    isRecording = false;
+                    updateUI();
+                }
+            }
+
+            function updateUI() {
+                if (isRecording) {
+                    toggleBtn.textContent = 'Parar Gravação';
+                    toggleBtn.classList.add('recording');
+                } else {
+                    toggleBtn.textContent = 'Iniciar Gravação';
+                    toggleBtn.classList.remove('recording');
+                }
+            }
+
+            toggleBtn.addEventListener('click', () => {
+                if (!isRecording) {
+                    start();
+                } else {
+                    stop();
+                }
+            });
+        })();
+
+        // Módulo de Equalização
+        (function() {
+            const presets = {
+                pop: { bass: 0.7, mid: 0.5, treble: 0.8 },
+                rock: { bass: 0.8, mid: 0.7, treble: 0.6 },
+                hiphop: { bass: 0.9, mid: 0.6, treble: 0.5 },
+                classical: { bass: 0.5, mid: 0.7, treble: 0.9 }
+            };
+
+            const master = document.querySelector('.master-handle');
+            const eqs = document.querySelectorAll('.eq-handle');
+            const presetBtns = document.querySelectorAll('.preset-option');
+
+            let masterVolume = 0.5;
+            let eqSettings = { bass: 0.5, mid: 0.5, treble: 0.5 };
+
+            function setupDrag(handle, isMaster = false) {
+                let dragging = false;
+                
+                handle.addEventListener('mousedown', () => dragging = true);
+                
+                document.addEventListener('mousemove', (e) => {
+                    if (!dragging) return;
+                    
+                    const rect = handle.parentElement.getBoundingClientRect();
+                    let pos;
+                    
+                    if (isMaster) {
+                        pos = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+                        handle.style.left = `${pos * 100}%`;
+                        masterVolume = pos;
+                    } else {
+                        pos = Math.min(1, Math.max(0, (rect.bottom - e.clientY) / rect.height));
+                        handle.style.top = `${100 - (pos * 100)}%`;
+                        
+                        const index = Array.from(eqs).indexOf(handle);
+                        if (index === 0) eqSettings.bass = pos;
+                        else if (index === 1) eqSettings.mid = pos;
+                        else if (index === 2) eqSettings.treble = pos;
+                    }
+                });
+                
+                document.addEventListener('mouseup', () => dragging = false);
+            }
+
+            presetBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const preset = btn.getAttribute('data-eq');
+                    eqSettings = presets[preset];
+                    
+                    eqs[0].style.top = `${100 - (eqSettings.bass * 100)}%`;
+                    eqs[1].style.top = `${100 - (eqSettings.mid * 100)}%`;
+                    eqs[2].style.top = `${100 - (eqSettings.treble * 100)}%`;
+                });
+            });
+
+            setupDrag(master, true);
+            eqs.forEach(handle => setupDrag(handle));
+        })();
+
+        // Módulo de Chat
+        (function() {
+            const chatBtn = document.getElementById('assistantTrigger');
+            const chatWindow = document.getElementById('assistantWindow');
+            const closeBtn = document.querySelector('.btn-close');
+            const sendBtn = document.getElementById('sendButton');
+            const input = document.getElementById('messageInput');
+
+            chatBtn.addEventListener('click', () => chatWindow.classList.toggle('active'));
+            closeBtn.addEventListener('click', () => chatWindow.classList.remove('active'));
+
+            sendBtn.addEventListener('click', () => {
+                const message = input.value.trim();
+                if (message) {
+                    addMessage('user', message);
+                    input.value = '';
+                    setTimeout(() => addMessage('assistant', 'Processando...'), 500);
+                }
+            });
+
+            function addMessage(sender, text) {
+                const history = document.getElementById('chatHistory');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                messageDiv.textContent = text;
+                history.appendChild(messageDiv);
+                history.scrollTop = history.scrollHeight;
+            }
+        })();
     </script>
 </body>
 </html>

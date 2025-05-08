@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ControlSpeak - Audio Studio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" href="controllspeak_favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <style>
         :root {
             --primary: linear-gradient(135deg, #112809 0%, #1a3a0e 100%);
@@ -37,7 +37,7 @@
             -webkit-backdrop-filter: blur(12px);
             border-right: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-            padding: 20px;
+            padding: 30px;
             display: flex;
             flex-direction: column;
             transition: width 0.3s ease;
@@ -61,12 +61,18 @@
 
         .logo {
             .app-header {
-                padding: 10px 20px;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.1);
                 flex-shrink: 0;
+                padding: 15px;
+                height: var(--header-height, 80px);
+            }
+
+            .app-logo {
+                height: 50px;
+                width: auto;
             }
 
             .menu-toggle-btn {
@@ -75,7 +81,6 @@
                 cursor: pointer;
                 padding: 5px;
                 border-radius: 4px;
-                transition: background 0.3s ease;
             }
 
             .menu-toggle-btn:hover {
@@ -83,8 +88,8 @@
             }
 
             .menu-icon {
-                width: 24px;
-                height: 24px;
+                width: 32px;
+                height: 32px;
             }
             text-align: center;
             margin-bottom: 20px;
@@ -111,18 +116,39 @@
         }
 
         .menu-item {
-            padding: 12px 15px;
-            margin-bottom: 8px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 30px;
+            padding: 25px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(149, 16, 16, 0.1);
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .menu-toggle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .menu-logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
         }
 
         .menu-item:hover {
-            background-color: rgba(255, 255, 255, 0.08);
+            background-color: rgba(4, 32, 9, 0.882);
+            border-color: rgba(28, 230, 6, 0.489);
         }
 
         .menu-item.active {
@@ -148,19 +174,18 @@
         /* Carousel Styles */
         .ads-carousel {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 1200px;
             height: 30vh;
             z-index: 105;
             background: rgba(255, 255, 255, 0.95);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             transition: all 0.3s ease;
-        }
-
-        .sidebar.collapsed ~ .ads-carousel {
-            left: var(--collapsed-sidebar);
+            border-radius: 12px;
         }
 
         .carousel-container {
@@ -242,7 +267,7 @@
         .audio-controls {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: l;
             justify-content: center;
             flex-grow: 1;
             padding: 5px 0; /* Compactação máxima */
@@ -276,28 +301,59 @@
             transition: height 0.1s;
         }
 
+        /* Control Buttons */
         .control-buttons {
             display: flex;
-            gap: 15px;
-            margin-top: 25px;
+            gap: 30px;
+            margin-top: 30px;
             justify-content: center;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
         }
 
-        .control-buttons .btn {
-            padding: 12px 24px;
+        .btn {
+            width: 200px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
             font-size: 16px;
-            min-width: 120px;
-            border-radius: 8px;
+            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.1);
+            color: white;
+            position: relative;
+            overflow: hidden;
         }
 
-        .control-buttons .btn-primary {
-            background: #04d624;
-            border-color: #04d624;
+        .btn i {
+            margin-right: 8px;
+            font-size: 1.2em;
         }
 
-        .control-buttons .btn-secondary {
-            background: #2c3e50;
-            border-color: #38b3db;
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 255, 0, 0.2);
+            transform: scale(0);
+            transition: transform 0.3s ease;
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            transform: scale(1);
+        }
+
+        .btn:hover {
+            color: #00ff00;
         }
 
         @media (max-width: 768px) {
@@ -371,29 +427,44 @@
 
         /* Footer Styles */
         footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1a1a1a;
+            color: white;
             padding: 20px;
             text-align: center;
-            background-color: rgba(0, 0, 0, 0.2);
-            position: relative;
-            margin-top: auto;
-            z-index: 90; /* Rodapé fica abaixo de tudo */
+            z-index: 100;
         }
 
         .social-icons {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 20px;
             margin-bottom: 10px;
         }
 
         .social-icon {
-            font-size: 20px;
-            color: var(--text);
-            transition: color 0.3s;
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
         }
 
         .social-icon:hover {
-            color: var(--secondary);
+            color: #00ff00;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            padding: 20px;
+            width: calc(100% - var(--sidebar-width));
+            transition: width 0.3s ease;
+            margin-bottom: 80px; /* Espaço para o rodapé fixo */
+        }
+
+        .sidebar.collapsed ~ .main-content {
+            width: calc(100% - var(--collapsed-sidebar));
         }
 
         .copyright {
@@ -618,53 +689,11 @@
         .eq-handle {
             width: 24px;
             height: 8px;
-            background: #2e97e1;
+            background: #0a1822;
             border-radius: 3px;
             cursor: pointer;
             position: absolute;
             left: -2px;
-        }
-
-        .preset-selector {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
-
-        .preset-btn {
-            background: none;
-            border: 1px solid #3498db;
-            color: #3498db;
-            border-radius: 3px;
-            padding: 2px 5px;
-            font-size: 10px;
-            cursor: pointer;
-        }
-
-        .preset-menu {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 20px;
-            background: #2c3e50;
-            border-radius: 5px;
-            padding: 5px;
-            z-index: 10;
-        }
-
-        .preset-menu.show {
-            display: block;
-        }
-
-        .preset-option {
-            padding: 5px 10px;
-            font-size: 12px;
-            cursor: pointer;
-        }
-
-        .preset-option:hover {
-            background: #3498db;
-            color: white;
         }
 
         /* Novo posicionamento do volume principal */
@@ -672,7 +701,6 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            background: #2c3e50;
             padding: 10px 15px;
             border-radius: 8px;
             margin-bottom: 15px;
@@ -687,7 +715,7 @@
         .master-fader {
             width: 150px;
             height: 20px;
-            background: #34495e;
+            background: #316169bf;
             border-radius: 10px;
             position: relative;
         }
@@ -695,16 +723,140 @@
         .master-handle {
             width: 15px;
             height: 25px;
-            background: #3498db;
             border-radius: 5px;
             position: absolute;
-            top: -2.5px;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        /* Seção de Equalização */
-        .eq-section {
-            margin-top: 20px;
+        .preset-container {
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+            margin-left: auto;
+            z-index: 10000;
+        }
+
+        .preset-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .preset-btn:hover {
+            background: rgba(9, 68, 43, 0.552);
+            transform: translateY(-2px);
+        }
+
+        .preset-btn i {
+            font-size: 16px;
+        }
+
+        .preset-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin-top: 8px;
+            background: rgba(22, 56, 31, 0.9);
+            border-radius: 8px;
+            padding: 10px;
+            min-width: 200px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+        }
+
+        .preset-menu.show {
+            display: block;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin-top: 8px;
+        }
+
+        .preset-menu.show {
+            display: block;
+        }
+
+        .genre-section {
+            margin-bottom: 15px;
+        }
+
+        .genre-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            font-weight: 500;
+            color: var(--secondary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .genre-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            padding: 10px 0;
+            width: 100%;
+        }
+
+        .genre-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .genre-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(4px);
+        }
+
+        .genre-option i {
+            font-size: 16px;
+            color: var(--secondary);
+        }
+
+        .preset-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(4px);
+        }
+
+        .preset-option i {
+            font-size: 16px;
+            color: var(--secondary);
+        }
+
+        .preset-button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .preset-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .preset-button.active {
+            background: var(--secondary);
+            color: white;
         }
 
         /* Ajustes de tamanho proporcional */
@@ -735,50 +887,24 @@
         @media (max-width: 768px) {
             .eq-fader {
                 height: 100px;
+            }}       
+
+            .fader-handle {
+                width: 40px;
+                height: 8px;
+                background: #3498db;
+                border-radius: 4px;
+                cursor: pointer;
             }
-        }
 
-        /* Estilo do Visualizador de Ondas */
-        .wave-container {
-            width: 100%;
-            height: 130px; /* Redução proporcional */
-            background: #0a0a15;
-            border: 2px solid #4a4a6a;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            margin-top: 0; /* Otimização extrema do espaço */
-            overflow: hidden;
-            position: relative;
-        }
-
-        .wave-display {
-            width: 100%;
-            height: 100%;
-            position: relative;
-        }
-
-        #waveCanvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-
-        .wave-center-line {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        /* Adicionar logo no cabeçalho */
-        .app-header {
-            display: flex;
-            align-items: center;
-            padding: 15px; /* Mais espaço ao redor */
-            height: var(--header-height, 80px);
-        }
+            /* Estilos aprimorados do Mixer */
+            .mixer-channel {
+                min-width: 120px;
+                background: #34495e;
+                padding: 15px;
+                border-radius: 8px;
+                position: relative;
+            }
 
         .app-logo {
             height: 50px;
@@ -840,199 +966,6 @@
             transform: scale(0.95);
         }
 
-        /* Estilos do Assistente */
-        .assistant-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 350px;
-            background: #1e1e2d;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            overflow: hidden;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            max-height: 600px;
-        }
-
-        .assistant-header {
-            padding: 15px;
-            background: #2a2a3a;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .assistant-dialog {
-            padding: 15px;
-            background: #252536;
-        }
-
-        .conversation-history {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 15px;
-        }
-
-        .assistant-input-area {
-            padding: 10px;
-            display: flex;
-            gap: 8px;
-            border-top: 1px solid #3a3a4a;
-        }
-
-        .message-input {
-            flex-grow: 1;
-            padding: 10px;
-            border-radius: 6px;
-            border: none;
-            background: #2a2a3a;
-            color: white;
-        }
-
-        .btn-send, .btn-file {
-            padding: 10px 15px;
-            background: #4a4a6a;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .btn-file {
-            display: flex;
-            align-items: center;
-        }
-
-        /* Estilos integrados ao menu existente */
-        .assistant-container {
-            display: none;
-            padding: 10px;
-            background: #252536;
-            border-radius: 8px;
-            margin-top: 10px;
-        }
-        
-        #assistantMenuItem.active .assistant-container {
-            display: block;
-        }
-        
-        .conversation-history {
-            max-height: 200px;
-            overflow-y: auto;
-            margin: 10px 0;
-        }
-        
-        .assistant-input-area {
-            display: flex;
-            gap: 5px;
-        }
-        
-        .message-input {
-            flex-grow: 1;
-            padding: 8px;
-            border-radius: 4px;
-            border: none;
-            background: #2a2a3a;
-            color: white;
-        }
-        
-        .btn-send, .btn-file {
-            padding: 8px 12px;
-            background: #4a4a6a;
-            border: none;
-            border-radius: 4px;
-            color: white;
-            cursor: pointer;
-        }
-
-        /* Janela do Assistente */
-        .assistant-window {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 380px; /* Aumentado de 350px */
-            height: 500px; /* Altura definida */
-            background: 
-                linear-gradient(rgba(30, 30, 45, 0.95), rgba(30, 30, 45, 0.95)),
-                url('controllspeak_logo.svg') center/contain no-repeat;
-            background-blend-mode: multiply;
-            opacity: 0.98;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            z-index: 1000;
-            display: none;
-        }
-        
-        .assistant-window.active {
-            display: block;
-        }
-        
-        .assistant-header {
-            padding: 15px;
-            background: #2a2a3a;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 12px 12px 0 0;
-        }
-        
-        .assistant-content {
-            padding: 15px;
-            height: calc(100% - 50px);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .conversation-history {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 15px;
-        }
-        
-        .input-area {
-            padding: 15px;
-            margin-top: auto; /* Fixa no rodapé */
-            background: rgba(42, 42, 58, 0.7);
-            border-top: 1px solid #4a4a6a;
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-        
-        .input-area input {
-            flex-grow: 1;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #4a4a6a;
-            background: #2a2a3a;
-            color: white;
-        }
-        
-        .btn-send, .btn-file {
-            padding: 10px 15px;
-            background: #4a4a6a;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        
-        .assistant-window::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(20, 20, 35, 0.6);
-            pointer-events: none;
-            border-radius: 12px;
-        }
-
         /* Menu translúcido */
         .sidebar {
             background: rgba(42, 42, 58, 0.7) !important;
@@ -1075,6 +1008,447 @@
         .menu-item:hover, .submenu-item:hover {
             background: rgba(120, 150, 110, 0.2); /* Verde claro no hover */
         }
+
+        /* Mixer de Som */
+        .audio-mixer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 500px;
+            background: rgba(42, 42, 58, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            z-index: 1000;
+            display: none;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 25px;
+            right: 30px;
+            background: none;
+            border: none;
+            color: var(--secondary);
+            font-size: 32px;
+            cursor: pointer;
+            padding: 12px;
+            transition: all 0.2s ease;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .close-btn:hover {
+            color: #ff3a3a;
+            background: rgba(255, 58, 58, 0.2);
+            transform: scale(1.15);
+            box-shadow: 0 6px 16px rgba(255, 58, 58, 0.3);
+        }
+
+        .close-btn:active {
+            transform: scale(0.95);
+        }
+
+        .audio-mixer.active {
+            display: block;
+        }
+
+        .master-controls {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .master-volume {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .master-fader {
+            flex: 1;
+            height: 4px;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .master-handle {
+            width: 12px;
+            height: 12px;
+            background: var(--secondary);
+            border-radius: 50%;
+            position: absolute;
+            top: -4px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .mixer-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .eq-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .eq-band {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            padding: 10px 0;
+        }
+
+        .eq-label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .eq-value {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: var(--secondary);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            z-index: 1;
+        }
+
+        .eq-fader {
+            height: 140px;
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin: 5px 0;
+        }
+
+        .eq-handle {
+            width: 6px;
+            height: 24px;
+            background: var(--secondary);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: pointer;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+
+        .eq-handle:hover {
+            background: #61ff3a;
+            transform: scale(1.1);
+        }
+
+        .eq-handle:active {
+            transform: scale(1.15);
+        }
+        .assistant-container {
+            position: fixed;
+            right: 20px;
+            bottom: 150px;
+            z-index: 1000;
+        }
+
+        .assistant-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(100, 130, 90, 0.15);
+            border: 2px solid rgba(100, 130, 90, 0.3);
+            color: #19eb69;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .assistant-btn:hover {
+            transform: scale(1.2);
+            background: rgba(100, 130, 90, 0.3);
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+
+        .assistant-btn:active {
+            transform: scale(1.1);
+            background: rgba(100, 130, 90, 0.4);
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.7);
+        }
+
+        .assistant-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .assistant-modal.show {
+            display: flex;
+        }
+
+        .assistant-modal-content {
+            width: 600px;
+            max-width: 90%;
+            background: rgba(20, 56, 31, 0.95);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .assistant-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .assistant-modal-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .assistant-modal-title i {
+            font-size: 24px;
+            color: #19eb69;
+        }
+
+        .assistant-modal-title h2 {
+            color: #fff;
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .assistant-menu.show {
+            display: block;
+        }
+
+        .assistant-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .assistant-header i {
+            font-size: 24px;
+            color: #19eb69;
+        }
+
+        .assistant-header span {
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .close-assistant {
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            padding: 5px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .close-assistant:hover {
+            opacity: 1;
+        }
+
+        .assistant-content {
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .file-upload {
+            position: relative;
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .upload-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            background: rgba(25, 235, 105, 0.1);
+            border: 1px solid rgba(25, 235, 105, 0.2);
+            border-radius: 6px;
+            color: #19eb69;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            background: rgba(25, 235, 105, 0.2);
+            border-color: #19eb69;
+        }
+
+        .upload-btn i {
+            margin-right: 8px;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .quick-action-btn {
+            flex: 1;
+            padding: 8px 12px;
+            background: rgba(25, 235, 105, 0.1);
+            border: 1px solid rgba(25, 235, 105, 0.2);
+            border-radius: 6px;
+            color: #19eb69;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quick-action-btn:hover {
+            background: rgba(25, 235, 105, 0.2);
+            border-color: #19eb69;
+        }
+
+        .quick-action-btn i {
+            margin-right: 8px;
+        }
+
+        .assistant-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #19eb69;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .assistant-avatar i {
+            font-size: 24px;
+            color: #fff;
+        }
+
+        .assistant-text {
+            flex: 1;
+        }
+
+        .assistant-text h3 {
+            margin: 0 0 10px 0;
+            color: #fff;
+            font-size: 18px;
+        }
+
+        .assistant-text p {
+            margin: 0 0 15px 0;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .welcome {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .input-container input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .input-container input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .send-btn {
+            background: #19eb69;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .send-btn:hover {
+            background: #14c754;
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+
+        .user-message {
+            background: rgba(25, 235, 105, 0.1);
+            color: #19eb69;
+            margin-left: auto;
+        }
+
+        .assistant-message {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
     </style>
 </head>
 
@@ -1122,76 +1496,33 @@
 
     <!-- Sidebar Navigation -->
     <div class="sidebar" id="sidebar">
-        <header class="app-header">
-            <button id="menuToggle" class="menu-toggle-btn">
-                <img src="favicon.svg" alt="Menu" class="menu-icon">
-            </button>
-        </header>
-
-        <div class="menu">
-            <div class="menu-item active">
+        <div class="menu-toggle">
+            <img src="controllspeak_logo.svg" alt="ControlSpeak" class="menu-logo">
+        </div>
+        <div class="menu-items">
+            <div class="menu-item" id="home">
                 <i class="fas fa-home"></i>
                 <div class="menu-text">Home</div>
             </div>
-            <div class="menu-item">
-                <i class="fas fa-user"></i>
-                <div class="menu-text">Profile</div>
+            <div class="menu-item" id="record">
+                <i class="fas fa-microphone"></i>
+                <div class="menu-text">Gravar</div>
             </div>
-            <div class="menu-item">
-                <i class="fas fa-podcast"></i>
-                <div class="menu-text">Podcasts</div>
+            <div class="menu-item" id="mixer">
+                <i class="fas fa-sliders-h"></i>
+                <div class="menu-text">Mixer</div>
             </div>
-            <div class="menu-item">
-                <i class="fas fa-heart"></i>
-                <div class="menu-text">Favorites</div>
+            <div class="menu-item" id="effects">
+                <i class="fas fa-magic"></i>
+                <div class="menu-text">Efeitos</div>
             </div>
-            <div class="menu-item" id="collections-menu">
-                <i class="fas fa-folder"></i>
-                <div class="menu-text">Collections</div>
-                <div class="submenu" id="collections-submenu">
-                    <div class="submenu-item">Musics</div>
-                    <div class="submenu-item">Recordings</div>
-                    <div class="submenu-item">Effects</div>
-                    <div class="submenu-item">Projects</div>
-                </div>
+            <div class="menu-item" id="library">
+                <i class="fas fa-music"></i>
+                <div class="menu-text">Biblioteca</div>
             </div>
-            <div class="menu-item">
+            <div class="menu-item" id="about">
                 <i class="fas fa-info-circle"></i>
                 <div class="menu-text">About Us</div>
-            </div>
-            <!-- Novo item para toggle do chatbot -->
-            <div class="menu-item" id="assistantTrigger">
-                <div class="chatbot-icon">
-                    <i class="fas fa-comment-dots"></i>
-                </div>
-                <div class="menu-text">Assistente</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Janela do Assistente -->
-    <div class="assistant-window" id="assistantWindow">
-        <div class="assistant-header">
-            <h3>Assistente de Gravação</h3>
-            <button class="btn-close">×</button>
-        </div>
-        
-        <div class="assistant-content">
-            <div class="welcome-message">
-                <p>Olá! Como posso ajudar com suas gravações hoje?</p>
-            </div>
-            
-            <div class="conversation-history" id="chatHistory"></div>
-            
-            <div class="input-area">
-                <input type="text" placeholder="Digite sua mensagem..." id="messageInput">
-                <button class="btn-send" id="sendButton">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-                <label class="btn-file">
-                    <input type="file" id="fileInput" hidden>
-                    <i class="fas fa-paperclip"></i>
-                </label>
             </div>
         </div>
     </div>
@@ -1201,18 +1532,55 @@
         <!-- Recording Indicator -->
         <div class="recording-indicator" id="recordingIndicator"></div>
 
-        <!-- Audio Controls -->
-        <div class="audio-controls">
-            <!-- Visualizador de Ondas -->
-            <div class="wave-container">
-                <div class="wave-display">
-                    <canvas id="waveCanvas"></canvas>
-                    <div class="wave-center-line"></div>
+        <!-- Assistente -->
+        <div class="assistant-container">
+            <button class="assistant-btn" id="assistantBtn">
+                <i class="fas fa-comment-dots"></i>
+            </button>
+            <div class="assistant-modal" id="assistantModal">
+                <div class="assistant-modal-content">
+                    <div class="assistant-modal-header">
+                        <div class="assistant-modal-title">
+                            <i class="fas fa-robot"></i>
+                            <h2>Assistente de Áudio</h2>
+                        </div>
+                        <button class="close-assistant">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="assistant-content">
+                        <div class="chat-container">
+                            <!-- Mensagens serão inseridas aqui -->
+                        </div>
+                        <div class="input-container">
+                            <div class="file-upload">
+                                <input type="file" id="audioFile" accept="audio/*" style="display: none;">
+                                <label for="audioFile" class="upload-btn">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    Adicionar arquivo de áudio
+                                </label>
+                            </div>
+                            <input type="text" placeholder="Digite sua mensagem..." id="assistantInput">
+                            <button class="send-btn">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Audio Controls -->
+        <div class="audio-controls">
+
 
             <!-- Mixer de Som -->
             <div class="audio-mixer">
+                <div class="close-btn-container">
+                    <button class="close-btn">
+                        <span class="close-icon">&times;</span>
+                    </button>
+                </div>
                 <!-- Controle Mestre de Áudio -->
                 <div class="master-controls">
                     <div class="master-volume">
@@ -1229,6 +1597,100 @@
                     <div class="mixer-title">
                         <i class="fas fa-sliders-h"></i>
                         <span>Equalização</span>
+                        
+                        <!-- Presets -->
+                        <div class="preset-container">
+                            <button class="preset-btn">
+                                <i class="fas fa-volume-up"></i>
+                                <span>Presets</span>
+                                <i class="fas fa-caret-down"></i>
+                            </button>
+                            <div class="preset-menu">
+                                <!-- Gêneros Populares -->
+                                <div class="genre-section">
+                                    <div class="genre-header">
+                                        <i class="fas fa-music"></i>
+                                        <span>Gêneros Populares</span>
+                                    </div>
+                                    <div class="genre-grid">
+                                        <div class="genre-option" data-eq="pop">
+                                            <i class="fas fa-volume-up"></i>
+                                            <span>Pop</span>
+                                        </div>
+                                        <div class="genre-option" data-eq="rock">
+                                            <i class="fas fa-volume-up"></i>
+                                            <span>Rock</span>
+                                        </div>
+                                        <div class="genre-option" data-eq="hiphop">
+                                            <i class="fas fa-volume-up"></i>
+                                            <span>Hip Hop</span>
+                                        </div>
+                                        <div class="genre-option" data-eq="classical">
+                                            <i class="fas fa-volume-up"></i>
+                                            <span>Clássico</span>
+                                        </div>
+                                        <div class="genre-option" data-eq="electronic">
+                                            <i class="fas fa-volume-up"></i>
+                                            <span>Eletrônica</span>
+                                        </div>
+                                        <div class="genre-option" data-eq="jazz">
+                                            <i class="fas fa-volume-up"></i>
+                                            <span>Jazz</span>
+                                        </div>
+                                        <div class="genre-option" data-eq="country">
+                                            <i class="fas fa-volume-up"></i>
+                                            <span>Country</span>
+                                        </div>
+                                        <div class="genre-option" data-eq="metal">
+                                            <i class="fas fa-volume-up"></i>
+                                            <span>Metal</span>
+                                        </div>
+                                        <div class="genre-option" data-eq="reggae">
+                                            <i class="fas fa-volume-up"></i>
+                                            <span>Reggae</span>
+                                        </div>
+                                        <div class="genre-option" data-eq="punk">
+                                            <i class="fas fa-volume-up"></i>
+                                            <span>Punk</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Gêneros Especiais -->
+                                <div class="genre-section">
+                                    <div class="genre-header">
+                                        <i class="fas fa-star"></i>
+                                        <span>Gêneros Especiais</span>
+                                    </div>
+                                    <div class="genre-grid">
+                                        <div class="genre-option" data-eq="lofi">
+                                            <i class="fas fa-volume-up"></i>
+                                            <span>Lo-Fi</span>
+                                        </div>
+                                        <div class="genre-option" data-eq="ambient">
+                                            <i class="fas fa-volume-up"></i>
+                                            <span>Ambient</span>
+                                        </div>
+                                        <div class="genre-option" data-eq="orchestral">
+                                            <i class="fas fa-volume-up"></i>
+                                            <span>Orquestral</span>
+                                        </div>
+                                        <div class="genre-option" data-eq="acoustic">
+                                            <i class="fas fa-volume-up"></i>
+                                            <span>Acústico</span>
+                                        </div>
+                                        <div class="genre-option" data-eq="indie">
+                                            <i class="fas fa-volume-up"></i>
+                                            <span>Indie</span>
+                                        </div>
+                                        <div class="genre-option" data-eq="blues">
+                                            <i class="fas fa-volume-up"></i>
+                                            <span>Blues</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="eq-controls">
@@ -1240,49 +1702,47 @@
                             <div class="eq-controls">
                                 <div class="eq-band">
                                     <span class="eq-label">Graves</span>
+                                    <div class="eq-value">0 dB</div>
                                     <div class="eq-fader">
                                         <div class="eq-handle" style="top: 50%;"></div>
                                     </div>
                                 </div>
                                 <div class="eq-band">
                                     <span class="eq-label">Médios</span>
+                                    <div class="eq-value">0 dB</div>
                                     <div class="eq-fader">
                                         <div class="eq-handle" style="top: 50%;"></div>
                                     </div>
                                 </div>
                                 <div class="eq-band">
                                     <span class="eq-label">Agudos</span>
+                                    <div class="eq-value">0 dB</div>
                                     <div class="eq-fader">
                                         <div class="eq-handle" style="top: 50%;"></div>
                                     </div>
                                 </div>
                             </div>
                             
-                            <!-- Presets -->
-                            <div class="preset-selector">
-                                <button class="preset-btn">Presets <i class="fas fa-caret-down"></i></button>
-                                <div class="preset-menu">
-                                    <div class="preset-option" data-eq="pop">Pop</div>
-                                    <div class="preset-option" data-eq="rock">Rock</div>
-                                    <div class="preset-option" data-eq="hiphop">Hip Hop</div>
-                                    <div class="preset-option" data-eq="classical">Clássico</div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <!-- Control Buttons -->
             <div class="control-buttons">
-                <button class="btn btn-primary" id="toggleAudio">Start Recording</button>
-                <button class="btn btn-secondary" id="saveButton">
+                <button class="btn" id="toggleAudio">
+                    <i class="fas fa-microphone"></i> Start Recording
+                </button>
+                <button class="btn" id="saveButton">
                     <i class="fas fa-save"></i> Save
                 </button>
-                <button class="btn btn-secondary" id="effectsButton">
+                <button class="btn" id="effectsButton">
                     <i class="fas fa-sliders-h"></i> Effects
                 </button>
             </div>
+
+            <!-- Overlay para o mixer -->
+            <div class="mixer-overlay"></div>
+            
         </div>
 
         <!-- Footer -->
@@ -1300,15 +1760,25 @@
         </footer>
     </div>
 
+
     <script>
+
         // Módulo de Controle de Menu
         (function() {
             const sidebar = document.getElementById('sidebar');
-            const toggleBtn = document.getElementById('menuToggle');
-            
+            const toggleBtn = document.querySelector('.menu-toggle');
+            const menuItems = document.querySelectorAll('.menu-item');
+            const submenuIcons = document.querySelectorAll('.submenu-icon');
+            const mixer = document.querySelector('.audio-mixer');
+            const overlay = document.querySelector('.mixer-overlay');
+            const effectsBtn = document.getElementById('effectsButton');
+
+            // Evento para alternar o menu
             toggleBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 sidebar.classList.toggle('collapsed');
+                menuItems.forEach(item => item.classList.toggle('collapsed'));
+                submenuIcons.forEach(icon => icon.classList.toggle('collapsed'));
                 
                 // Ajustar largura do carrossel
                 const carousel = document.querySelector('.ads-carousel');
@@ -1317,6 +1787,46 @@
                         ? `calc(100% - var(--sidebar-width))` 
                         : `calc(100% - var(--collapsed-sidebar))`;
                 }
+            });
+
+            // Evento para abrir/fechar o mixer
+            const closeBtn = document.querySelector('.close-btn');
+            const presetBtn = document.querySelector('.preset-btn');
+            const presetMenu = document.querySelector('.preset-menu');
+            
+            effectsBtn.addEventListener('click', () => {
+                mixer.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+
+            // Fechar quando clicar no overlay
+            overlay.addEventListener('click', () => {
+                mixer.classList.remove('active');
+                overlay.classList.remove('active');
+                presetMenu.classList.remove('show');
+            });
+
+            // Fechar quando clicar no botão X
+            closeBtn.addEventListener('click', () => {
+                mixer.classList.remove('active');
+                overlay.classList.remove('active');
+                presetMenu.classList.remove('show');
+            });
+
+            // Gerenciar o dropdown de presets
+            presetBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                presetMenu.classList.toggle('show');
+            });
+
+            // Fechar dropdown quando clicar fora
+            document.addEventListener('click', () => {
+                presetMenu.classList.remove('show');
+            });
+
+            // Prevenir fechamento quando clicar dentro do dropdown
+            presetMenu.addEventListener('click', (e) => {
+                e.stopPropagation();
             });
         })();
 
@@ -1364,6 +1874,7 @@
                     
                     recorder.start();
                     isRecording = true;
+                    
                     updateUI();
                 } catch (err) {
                     console.error('Erro ao acessar microfone:', err);
@@ -1375,6 +1886,7 @@
                 if (recorder && recorder.state !== 'inactive') {
                     recorder.stop();
                     isRecording = false;
+                    
                     updateUI();
                 }
             }
@@ -1447,46 +1959,143 @@
                 btn.addEventListener('click', () => {
                     const preset = btn.getAttribute('data-eq');
                     eqSettings = presets[preset];
-                    
-                    eqs[0].style.top = `${100 - (eqSettings.bass * 100)}%`;
-                    eqs[1].style.top = `${100 - (eqSettings.mid * 100)}%`;
-                    eqs[2].style.top = `${100 - (eqSettings.treble * 100)}%`;
+                    updateEQ();
                 });
             });
 
             setupDrag(master, true);
             eqs.forEach(handle => setupDrag(handle));
         })();
+        // Adicionando estilos para as mensagens
+        const style = document.createElement('style');
+        style.textContent = `
+            .chat-message {
+                display: flex;
+                align-items: flex-start;
+                margin-bottom: 15px;
+                padding: 10px;
+                border-radius: 10px;
+                max-width: 80%;
+            }
 
-        // Módulo de Chat
-        (function() {
-            const chatBtn = document.getElementById('assistantTrigger');
-            const chatWindow = document.getElementById('assistantWindow');
-            const closeBtn = document.querySelector('.btn-close');
-            const sendBtn = document.getElementById('sendButton');
-            const input = document.getElementById('messageInput');
+            .user-message {
+                background: rgba(25, 235, 105, 0.1);
+                border: 1px solid rgba(25, 235, 105, 0.2);
+                margin-left: auto;
+            }
 
-            chatBtn.addEventListener('click', () => chatWindow.classList.toggle('active'));
-            closeBtn.addEventListener('click', () => chatWindow.classList.remove('active'));
+            .assistant-message {
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                color: #fff;
+            }
 
-            sendBtn.addEventListener('click', () => {
-                const message = input.value.trim();
-                if (message) {
-                    addMessage('user', message);
-                    input.value = '';
-                    setTimeout(() => addMessage('assistant', 'Processando...'), 500);
+            .chat-container {
+                padding: 15px;
+                height: 400px;
+                overflow-y: auto;
+            }
+
+            .chat-container::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            .chat-container::-webkit-scrollbar-track {
+                background: rgba(255, 255, 255, 0.05);
+            }
+
+            .chat-container::-webkit-scrollbar-thumb {
+                background: rgba(25, 235, 105, 0.3);
+                border-radius: 4px;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Função para adicionar mensagem
+        function addMessage(message, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${isUser ? 'user-message' : 'assistant-message'}`;
+            messageDiv.textContent = message;
+            const chatContainer = document.querySelector('.chat-container');
+            if (chatContainer) {
+                chatContainer.appendChild(messageDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        }
+
+        // Inicialização do assistente
+        document.addEventListener('DOMContentLoaded', () => {
+            const assistantBtn = document.getElementById('assistantBtn');
+            const assistantModal = document.getElementById('assistantModal');
+            const closeAssistant = document.querySelector('.close-assistant');
+            const overlay = document.querySelector('.assistant-modal');
+            const assistantInput = document.getElementById('assistantInput');
+            const audioFile = document.getElementById('audioFile');
+            const chatContainer = document.querySelector('.chat-container');
+
+            if (!assistantBtn || !assistantModal || !closeAssistant || !assistantInput || !audioFile || !chatContainer) {
+                console.error('Elementos do assistente não encontrados');
+                return;
+            }
+
+            // Adicionar mensagem de boas-vindas
+            addMessage('Olá! Sou seu assistente de áudio. Como posso ajudar você hoje?');
+
+            // Evento de clique no botão do assistente
+            assistantBtn.addEventListener('click', () => {
+                assistantModal.classList.add('show');
+            });
+
+            // Evento de clique no botão de fechar
+            closeAssistant.addEventListener('click', () => {
+                assistantModal.classList.remove('show');
+            });
+
+            // Fechar ao clicar fora
+            document.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    assistantModal.classList.remove('show');
                 }
             });
 
-            function addMessage(sender, text) {
-                const history = document.getElementById('chatHistory');
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${sender}`;
-                messageDiv.textContent = text;
-                history.appendChild(messageDiv);
-                history.scrollTop = history.scrollHeight;
+            // Enviar mensagem ao pressionar Enter
+            assistantInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && assistantInput.value.trim()) {
+                    sendMessage();
+                }
+            });
+
+            // Enviar mensagem ao clicar no botão
+            document.querySelector('.send-btn').addEventListener('click', () => {
+                if (assistantInput.value.trim()) {
+                    sendMessage();
+                }
+            });
+
+            // Função para enviar mensagem
+            function sendMessage() {
+                const userMessage = assistantInput.value.trim();
+                addMessage(userMessage, true);
+                assistantInput.value = '';
+                
+                // Simular resposta da IA
+                setTimeout(() => {
+                    addMessage('Processando sua mensagem...');
+                    setTimeout(() => {
+                        addMessage('Pronto! Sua mensagem foi processada.');
+                    }, 1500);
+                }, 1000);
             }
-        })();
+
+            // Evento de upload de arquivo
+            audioFile.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    addMessage(`Arquivo selecionado: ${file.name}`);
+                }
+            });
+        });
+
     </script>
 </body>
 </html>
